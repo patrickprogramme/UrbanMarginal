@@ -51,6 +51,11 @@ public class Controle implements AsyncResponse {
 			new ClientSocket(this, info, PORT);
 		}
 	}
+	
+	public void evenementChoixJoueur(String pseudo, int numPerso) {
+		(new Arene()).setVisible(true);
+		frameChoixJoueur.dispose();
+	}
 
 	@Override
 	public void reception(Connection connection, String ordre, Object info) {
@@ -59,7 +64,7 @@ public class Controle implements AsyncResponse {
 			if (typeJeu.equals("client")) {
 				frameEntreeJeu.dispose();
 				frameArene = new Arene();
-				frameChoixJoueur = new ChoixJoueur();
+				frameChoixJoueur = new ChoixJoueur(this);
 				frameChoixJoueur.setVisible(true);
 			}
 			break;
