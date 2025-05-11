@@ -1,5 +1,7 @@
 package controleur;
 
+import javax.swing.JPanel;
+
 import modele.Jeu;
 import modele.JeuClient;
 import modele.JeuServeur;
@@ -34,27 +36,52 @@ public class Controle implements AsyncResponse, Global {
 	}
 	
 	public void evenementEntreeJeu(String info) {
-		if (info.equals("serveur")) {
+		if (info.equals(SERVEUR)) {
 			new ServeurSocket(this, PORT);
 			leJeu = new JeuServeur(this);
 			frameEntreeJeu.dispose();
 			this.frameArene = new Arene();
-			this.frameArene.setVisible(true);
-			//(new Arene()).setVisible(true);			
+			((JeuServeur)this.leJeu).constructionMurs();
+			this.frameArene.setVisible(true);		
 		}
 		else {
 			new ClientSocket(this, info, PORT);
 		}
 	}
-	
+	/**
+	 * Informations provenant de la vue ChoixJoueur
+	 * @param pseudo le pseudo du joueur
+	 * @param numPerso le numéro du personnage choisi par le joueur
+	 */
 	public void evenementChoixJoueur(String pseudo, int numPerso) {
 		this.frameChoixJoueur.dispose();
-		//(new Arene()).setVisible(true);
 		this.frameArene.setVisible(true);
 		String info = PSEUDO+STRINGSEPARE+pseudo+STRINGSEPARE+ Integer.toString(numPerso);
 		((JeuClient)leJeu).envoi(info);
 	}
+	/**
+	 * Demande provenant de JeuServeur
+	 * @param ordre ordre à exécuter
+	 * @param info information à traiter
+	 */
+	public void evenementJeuServeur(String ordre, Object info) {
+		switch (ordre) {
+		case AJOUTMUR:
+			this.frameArene.ajoutMurs(info);
+			break;
+		case AJOUTPANELMURS:
+			this.leJeu.envoi((Connection)info, this.frameArene.getJpnMurs());
+		}
+	}
 
+	public void evenementJeuClient(String ordre, Object info) {
+		switch(ordre) {
+		case AJOUTPANELMURS:
+			this.frameArene.setJpnMurs((JPanel)info);
+			break;
+		}
+	}
+	
 	public void envoi(Connection connection, Object info) {
 		connection.envoi(info);
 	}
