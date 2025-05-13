@@ -35,7 +35,17 @@ public abstract class Objet {
 	 * @return true si les 2 objets se touchent
 	 */
 	public Boolean toucheObjet (Objet objet) {
-		return null;
+		if ((objet == null)) {return false;} //Un objet null ne peut pas provoquer de collision
+		
+		//position max des objet (position + largeur/hauteur)
+		int thisPosXMax = this.posX + this.jLabel.getWidth();
+		int objPosXMax = objet.posX + objet.getjLabel().getWidth();
+		int thisPosYMax = this.posY + this.jLabel.getHeight();
+		int objPosYMax = objet.posY + objet.getjLabel().getHeight();
+		
+		return (thisPosXMax > objet.posX &&
+				this.posX < objPosXMax &&
+				thisPosYMax > objet.posY &&
+				this.posY < objPosYMax);
 	}
-	
 }
