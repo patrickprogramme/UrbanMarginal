@@ -12,9 +12,10 @@ import javax.swing.SwingConstants;
 import controleur.Global;
 
 /**
- * Gestion des joueurs
- *
+ * Représente un joueur dans le jeu. 
+ * Cette classe gère l'affichage, la position, la vie, les interactions et la communication avec le serveur de jeu.
  */
+
 public class Joueur extends Objet implements Global {
 
 	/**
@@ -50,7 +51,17 @@ public class Joueur extends Objet implements Global {
 	 */
 	private JLabel message;
 	/**
-	 * Constructeur
+	 * Retourne le pseudo du joueur.
+	 * @return the pseudo
+	 */
+	public String getPseudo() {
+		return pseudo;
+	}
+
+	/**
+	 * Initialise un joueur avec une référence au serveur du jeu.
+	 *
+	 * @param jeuServeur Instance du jeu serveur permettant la gestion du joueur.
 	 */
 	public Joueur(JeuServeur jeuServeur) {
 		this.jeuServeur = jeuServeur;
@@ -60,7 +71,14 @@ public class Joueur extends Objet implements Global {
 	}
 
 	/**
-	 * Initialisation d'un joueur (pseudo et numéro, calcul de la 1ère position, affichage, création de la boule)
+	 * Initialise un joueur avec son pseudo et son numéro de personnage. 
+	 * Détermine sa première position sans chevaucher d'autres joueurs ou murs, 
+	 * puis ajoute son affichage et son message dans l'arène du jeu.
+	 *
+	 * @param pseudo Nom du joueur.
+	 * @param numPerso Numéro du personnage pour définir l'avatar.
+	 * @param lesJoueurs Liste des joueurs existants pour éviter les chevauchements.
+	 * @param lesMurs Liste des murs dans l'arène pour gérer les collisions.
 	 */
 	public void initPerso(String pseudo, int numPerso, Collection<Joueur> lesJoueurs, ArrayList<Mur> lesMurs) {
 		this.pseudo = pseudo;
@@ -79,7 +97,11 @@ public class Joueur extends Objet implements Global {
 	}
 
 	/**
-	 * Calcul de la première position aléatoire du joueur (sans chevaucher un autre joueur ou un mur)
+	 * Détermine la position initiale aléatoire du joueur dans l'arène.
+	 * S'assure que la position générée ne chevauche pas un autre joueur ou un mur.
+	 *
+	 * @param lesJoueurs Liste des joueurs déjà présents dans l'arène.
+	 * @param lesMurs Liste des murs pour éviter les collisions.
 	 */
 	private void premierePosition(Collection<Joueur> lesJoueurs, ArrayList<Mur> lesMurs) {
 		jLabel.setBounds(0, 0, LARGEURPERSO, HAUTEURPERSO);
@@ -90,7 +112,10 @@ public class Joueur extends Objet implements Global {
 	}
 	
 	/**
-	 * Affiche le personnage et son message
+	 * Met à jour l'affichage du personnage et son message sous le pseudo.
+	 * 
+	 * @param etat État actuel du joueur (ex: "MARCHE", "TOUCHE", "MORT").
+	 * @param etape Étape de l'animation pour afficher la bonne image du personnage.
 	 */
 	public void affiche(String etat, int etape) {
 		super.jLabel.setBounds(posX, posY, LARGEURPERSO, HAUTEURPERSO);
@@ -118,6 +143,7 @@ public class Joueur extends Objet implements Global {
 
 	/**
 	 * Contrôle si le joueur touche un des autres joueurs
+	 * @param lesJoueurs Liste des joueurs présents.
 	 * @return true si deux joueurs se touchent
 	 */
 	private Boolean toucheJoueur(Collection<Joueur> lesJoueurs) {
@@ -145,6 +171,7 @@ public class Joueur extends Objet implements Global {
 	
 	/**
 	* Contrôle si le joueur touche un des murs
+	* @param lesMurs Liste des murs présents.
 	* @return true si un joueur touche un mur
 	*/
 	private Boolean toucheMur(ArrayList<Mur> lesMurs) {

@@ -18,16 +18,17 @@ import javax.swing.SwingConstants;
 import java.awt.Cursor;
 
 /**
- * Frame du choix du joueur
+ * Fenêtre permettant au joueur de choisir son personnage et d'entrer son pseudo.
+ * Elle offre une interface pour naviguer entre différents personnages et valider son choix.
  */
 public class ChoixJoueur extends JFrame {
 
 	/**
-	 * Nombre total de personnages disponibles
+	 * Nombre total de personnages disponibles pour le joueur.
 	 */
 	private static final int NBPERSOS = 3;
 	/**
-	 * Instance du contrôleur
+	 * Instance du contrôleur permettant de gérer la sélection du joueur et l'envoi des informations.
 	 */
 	private Controle controle;
 	/**
@@ -78,21 +79,21 @@ public class ChoixJoueur extends JFrame {
 		
 	}
 	/**
-	 * Pointeur souris = standard
+	 * Change le pointeur de la souris en mode standard (curseur par défaut).
 	 */
 	private void sourisNormale() {
 		contentPane.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
 	
 	/**
-	 * Pointeur souris = doigt
+	 * Change le pointeur de la souris en mode "main" pour indiquer une zone interactive.
 	 */
 	private void sourisDoigt() {
 		contentPane.setCursor(new Cursor(Cursor.HAND_CURSOR));
 	}
 	
 	/**
-	 * affiche le personnage correspondant à son numéro
+	 * Met à jour l'affichage du personnage sélectionné en fonction de son numéro.
 	 */
 	private void affichePerso() {
 		String chemin = "personnages/perso"+numPerso+"marche1d1.gif";
@@ -102,7 +103,10 @@ public class ChoixJoueur extends JFrame {
 
 
 	/**
-	 * Create the frame.
+	 * Constructeur de la fenêtre de sélection du joueur.
+	 * Initialise les éléments graphiques et affiche le premier personnage par défaut.
+	 *
+	 * @param controle Instance du contrôleur permettant d'envoyer les informations sélectionnées.
 	 */
 	public ChoixJoueur(Controle controle) {
 		// Dimension de la frame en fonction de son contenu

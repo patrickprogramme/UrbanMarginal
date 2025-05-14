@@ -10,10 +10,14 @@ import javax.swing.JTextField;
 import controleur.Controle;
 
 /**
- * Frame de l'entrée dans le jeu (choix serveur/client)
+ * Fenêtre permettant au joueur de choisir son mode de connexion au jeu.
+ * Il peut démarrer un serveur, se connecter à un serveur existant via une adresse IP, ou quitter le jeu.
  */
 public class EntreeJeu extends JFrame {
 
+	/**
+	 * Identifiant de sérialisation pour garantir la compatibilité entre différentes versions de la classe.
+	 */
 	private static final long serialVersionUID = 1L;
 	/**
 	 * Panel général
@@ -50,7 +54,10 @@ public class EntreeJeu extends JFrame {
 	}	
 	
 	/**
-	 * Create the frame.
+	 * Constructeur de la fenêtre d'entrée dans le jeu.
+	 * Initialise l'affichage, les boutons d'interaction et la gestion des événements.
+	 *
+	 * @param controle Instance du contrôleur permettant de gérer les interactions utilisateur.
 	 */
 	public EntreeJeu(Controle controle) {
 		setResizable(false);

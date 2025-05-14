@@ -3,9 +3,8 @@ package modele;
 import javax.swing.JLabel;
 
 /**
- * Informations communes � tous les objets (joueurs, murs, boules)
- * permet de m�moriser la position de l'objet et de g�rer les  collisions
- *
+ * Classe abstraite représentant les objets du jeu (joueurs, murs, boules).
+ * Elle gère la position des objets et les interactions entre eux, notamment les collisions.
  */
 public abstract class Objet {
 
@@ -18,21 +17,26 @@ public abstract class Objet {
 	 */
 	protected Integer posY ;
 	/**
-	 * label pour afficher l'objet généré
+	 * Élément graphique permettant d'afficher l'objet dans l'interface utilisateur.
 	 */
 	protected JLabel jLabel;
 	/**
-	 * 
-	 * @return jLabel
+	 * Retourne l'élément graphique (`JLabel`) représentant l'objet.
+	 *
+	 * @return JLabel utilisé pour afficher l'objet.
 	 */
 	public JLabel getjLabel() {
 		return jLabel;
 	}
 
 	/**
-	 * contr�le si l'objet actuel touche l'objet pass� en param�tre
-	 * @param objet contient l'objet � contr�ler
-	 * @return true si les 2 objets se touchent
+	 * Vérifie si l'objet actuel entre en collision avec un autre objet.
+	 *
+	 * La collision est détectée lorsque les zones occupées par les deux objets
+	 * se chevauchent dans l'espace de jeu.
+	 *
+	 * @param objet Objet avec lequel tester la collision.
+	 * @return `true` si les deux objets se touchent, `false` sinon.
 	 */
 	public Boolean toucheObjet (Objet objet) {
 		if ((objet == null)) {return false;} //Un objet null ne peut pas provoquer de collision

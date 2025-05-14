@@ -4,19 +4,27 @@ import controleur.Controle;
 import outils.connexion.Connection;
 
 /**
- * Informations et méthodes communes aux jeux client et serveur
- *
+ * Classe abstraite définissant les méthodes communes pour les jeux client et serveur.
+ * Elle assure la gestion des connexions et de la communication entre les différentes instances du jeu.
  */
 public abstract class Jeu {
 
+	/**
+	 * Instance du contrôleur permettant l'envoi d'informations et la gestion des événements du jeu.
+	 */
 	protected Controle controle;
 	/**
-	 * Réception d'une connexion (pour communiquer avec un ordinateur distant)
+	 * Établit la connexion avec un ordinateur distant.
+	 *
+	 * @param connection Connexion permettant les échanges entre le client et le serveur.
 	 */
 	public abstract void connexion(Connection connection) ;
 	
 	/**
 	 * Réception d'une information provenant de l'ordinateur distant
+	 * @param connection Connexion active avec l'ordinateur distant.
+	 * @param info Donnée transmise par l'ordinateur distant.
+
 	 */
 	public abstract void reception(Connection connection, Object info) ;
 	
