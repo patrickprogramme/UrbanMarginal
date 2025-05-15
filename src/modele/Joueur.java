@@ -1,6 +1,7 @@
 package modele;
 
 import java.awt.Font;
+import java.awt.event.KeyEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -112,7 +113,7 @@ public class Joueur extends Objet implements Global {
 	}
 	
 	/**
-	 * Met à jour l'affichage du personnage et son message sous le pseudo.
+	 * Met à jour l'affichage du personnage et son message sous le pseudo pour tous les joueurs.
 	 * 
 	 * @param etat État actuel du joueur (ex: "MARCHE", "TOUCHE", "MORT").
 	 * @param etape Étape de l'animation pour afficher la bonne image du personnage.
@@ -130,15 +131,51 @@ public class Joueur extends Objet implements Global {
 	}
 
 	/**
-	 * Gère une action reçue et qu'il faut afficher (déplacement, tire de boule...)
+	 * Gère une action reçue et qu'il faut afficher (déplacement, tir de boule...)
 	 */
-	public void action() {
+	public void action(Integer action, Collection<Joueur> lesJoueurs, ArrayList<Mur> lesMurs) {
+		switch (action) {
+        case KeyEvent.VK_LEFT:
+        	deplace(-PAS, 0, lesJoueurs, lesMurs);
+            this.orientation = GAUCHE;
+            break;
+        case KeyEvent.VK_RIGHT:
+        	deplace(PAS, 0, lesJoueurs, lesMurs);
+            this.orientation = DROITE;
+            break;
+        case KeyEvent.VK_UP:
+        	deplace(0, -PAS, lesJoueurs, lesMurs);
+            break;
+        case KeyEvent.VK_DOWN:
+        	deplace(0, PAS, lesJoueurs, lesMurs);
+            break;
+		}
+		this.affiche(MARCHE, this.etape);
 	}
 
 	/**
 	 * Gère le déplacement du personnage
 	 */
-	private void deplace() { 
+	private void deplace(Integer deltaX, Integer deltaY, Collection<Joueur> lesJoueurs, ArrayList<Mur> lesMurs) {
+		this.etape = (etape % NBETAPESMARCHE) + 1;
+		
+		int savePosX = posX;
+		int savePosY = posY;
+		posX += deltaX;
+	    posY += deltaY;
+		
+		if (posX < 0 || 
+			posX > (LARGEURARENE - LARGEURPERSO) ||
+			posY < 0 ||
+			posY > (HAUTEURARENE - HAUTEURPERSO)) {
+			posX = savePosX;
+			posY = savePosY;
+			return;
+		}
+		if (toucheMur(lesMurs) || toucheJoueur(lesJoueurs)) {
+			posX = savePosX;
+			posY = savePosY;
+		}
 	}
 
 	/**

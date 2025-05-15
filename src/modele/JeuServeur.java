@@ -73,6 +73,9 @@ public class JeuServeur extends Jeu implements Global {
 			String message = auteur + " > " + infos[1];
 			this.controle.evenementJeuServeur(AJOUTPHRASE, message);
 			break;
+		case ACTION:
+			Integer action = Integer.parseInt(infos[1]);
+			this.lesJoueurs.get(connection).action(action, this.lesJoueurs.values(), this.lesMurs);
 		}
 	}
 	/**

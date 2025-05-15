@@ -16,6 +16,8 @@ import controleur.Controle;
 import controleur.Global;
 import modele.Mur;
 import modele.Objet;
+import java.awt.event.KeyAdapter;
+import java.util.Set;
 
 /**
  * Classe représentant l'arène du jeu, gérant l'affichage des joueurs, des murs, 
@@ -31,6 +33,13 @@ public class Arene extends JFrame implements Global {
 	 * Instance du contrôleur pour communiquer avec lui
 	 */
 	private Controle controle;
+	/**
+	 * Ensemble des codes de touches représentant les flèches directionnelles.
+	 * Un Set car : vérification rapide (O(1)) des touches valides + évite les doublons (ils sont interdits).
+	 */
+	private static final Set<Integer> TOUCHES_VALIDES = Set.of(
+		    KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_UP, KeyEvent.VK_DOWN
+		);
 	/**
 	 * Zone de saisie du t'chat
 	 */
@@ -94,6 +103,7 @@ public class Arene extends JFrame implements Global {
 				txtSaisie.setText("");
 				//txtSaisie.setCaretPosition(0);
 			}
+			this.contentPane.requestFocus();
 		}
 	}
 	/**
@@ -113,6 +123,7 @@ public class Arene extends JFrame implements Global {
 		this.jpnJeu.removeAll();
 		this.jpnJeu.add(jpnJeu);
 		this.jpnJeu.repaint();
+		this.contentPane.requestFocus();
 	}
 	/**
 	 * Retourne le panel contenant les murs de l'arène.
@@ -153,7 +164,11 @@ public class Arene extends JFrame implements Global {
 	 * Affiche les infos sur l'Arene
 	 */
 	public void afficherInfosArene() {
-		System.out.println("L'arène a été créée avec succès !");
+		// Utilisation de l'opérateur ternaire pour choisir entre "client" et "serveur"
+		String quiSuisJe = estClient ? "client" : "serveur"; 
+		// Formatage élégant de la chaîne pour éviter la concaténation avec "+"
+		String quiEstCe = String.format("L'arène du %s a été créée avec succès !", quiSuisJe); 
+		System.out.println(quiEstCe);
 
 		StringBuilder message = new StringBuilder("Composants ajoutés : ");
 		for (java.awt.Component comp : contentPane.getComponents()) {
@@ -165,6 +180,17 @@ public class Arene extends JFrame implements Global {
 		}
 
 		System.out.println(message.toString());
+	}
+	
+	/**
+	 * Gère l'événement de pression d'une touche.
+	 * Vérifie si la touche appartient aux touches directionnelles valides.
+	 * @param e L'événement KeyEvent contenant les informations sur la touche pressée.
+	 */
+	public void contentPane_keyPressed(KeyEvent e) {
+		if (TOUCHES_VALIDES.contains(e.getKeyCode())) {
+	        this.controle.evenementArene(e.getKeyCode());
+	    }
 	}
 	/**
 	 * Constructeur de la classe Arene.
@@ -184,6 +210,12 @@ public class Arene extends JFrame implements Global {
 		setTitle("Arena");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		contentPane = new JPanel();
+		contentPane.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				contentPane_keyPressed(e);
+			}
+		});
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
@@ -220,6 +252,12 @@ public class Arene extends JFrame implements Global {
 		txtChat = new JTextArea();
 		jspChat.setViewportView(txtChat);
 		txtChat.setEditable(false);
+		txtChat.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				contentPane_keyPressed(e);
+			}
+		});
 
 		JLabel lblFond = new JLabel("");
 		URL resource = getClass().getClassLoader().getResource(FONDARENE);

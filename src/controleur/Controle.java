@@ -137,9 +137,15 @@ public class Controle implements AsyncResponse, Global {
 	 * @param info Information sur l'événement.
 	 */
 
-	public void evenementArene(String info) {
-			String message = TCHAT + STRINGSEPARE + info;
-			((JeuClient)this.leJeu).envoi(message);
+	public void evenementArene(Object info) {
+			if (info instanceof String) {
+				String message = TCHAT + STRINGSEPARE + (String)info;
+				((JeuClient) this.leJeu).envoi(message);
+			}
+			if (info instanceof Integer) {
+				String message = ACTION + STRINGSEPARE + info;
+				((JeuClient) this.leJeu).envoi(message);
+			}
 	}
 	/**
 	 * Envoie une information via la connexion active.
