@@ -38,7 +38,7 @@ public class Arene extends JFrame implements Global {
 	 * Un Set car : vérification rapide (O(1)) des touches valides + évite les doublons (ils sont interdits).
 	 */
 	private static final Set<Integer> TOUCHES_VALIDES = Set.of(
-		    KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_UP, KeyEvent.VK_DOWN
+		    KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_SPACE
 		);
 	/**
 	 * Zone de saisie du t'chat
@@ -159,6 +159,7 @@ public class Arene extends JFrame implements Global {
 	public void ajoutJLabelJeu(JLabel jlabel) {
 		jpnJeu.add(jlabel);
 		jpnJeu.repaint();
+		System.out.println("Arene/ajoutJLabelJeu: ajout label" + jlabel.getBounds());
 	}
 	/**
 	 * Affiche les infos sur l'Arene

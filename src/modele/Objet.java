@@ -1,5 +1,8 @@
 package modele;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+
 import javax.swing.JLabel;
 
 /**
@@ -30,6 +33,20 @@ public abstract class Objet {
 	}
 
 	/**
+	 * @return the posX
+	 */
+	public Integer getPosX() {
+		return posX;
+	}
+
+	/**
+	 * @return the posY
+	 */
+	public Integer getPosY() {
+		return posY;
+	}
+
+	/**
 	 * Vérifie si l'objet actuel entre en collision avec un autre objet.
 	 *
 	 * La collision est détectée lorsque les zones occupées par les deux objets
@@ -51,5 +68,39 @@ public abstract class Objet {
 				this.posX < objPosXMax &&
 				thisPosYMax > objet.posY &&
 				this.posY < objPosYMax);
+	}
+	/**
+	 * Vérifie Vérifie si l'objet actuel entre en collision avec un des objets d'une collection.
+	 * @param lesObjets
+	 * @return bolléen : collision ou pas ?
+	 */
+	public Boolean toucheCollectionObjets(Collection<Objet> lesObjets) {
+		for (Objet objet : lesObjets) {
+			if (!objet.equals(this)) {
+				if (this.toucheObjet(objet)) {
+					return true;
+				} 
+			}
+		}
+		return false;
+	}
+	/**
+	 * Vérifie si l'objet actuel entre en collision avec un des objets d'une collection.
+	 * 
+	 * Cette méthode utilise l'API Stream pour :
+	 * - Parcourir efficacement la collection sans boucle explicite.
+	 * - Filtrer directement les objets en collision en excluant l'objet lui-même.
+	 * - Récupérer le premier objet trouvé en collision, réduisant ainsi le nombre d'opérations.
+	 * 
+	 * L'utilisation de Stream rend le code plus concis, lisible et optimisé pour la gestion des collisions.
+	 * 
+	 * @param lesObjets Collection des objets avec lesquels tester la collision.
+	 * @return Le premier objet détecté en collision ou `null` si aucune collision n'est trouvée.
+	 */
+	public Objet toucheCollectionObjetsAvecStream(Collection<Objet> lesObjets) {
+	    return lesObjets.stream()
+	                    .filter(objet -> !objet.equals(this) && this.toucheObjet(objet)) // Filtrer les objets en collision
+	                    .findFirst() // Prendre le premier trouvé
+	                    .orElse(null); // Retourner null si aucune collision n'est détectée
 	}
 }

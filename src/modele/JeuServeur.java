@@ -1,5 +1,6 @@
 package modele;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Hashtable;
 
 import javax.swing.JLabel;
@@ -25,7 +26,12 @@ public class JeuServeur extends Jeu implements Global {
 	 */
 
 	private Hashtable<Connection, Joueur> lesJoueurs = new Hashtable<Connection, Joueur>() ;
-
+	/**
+	 * @return the lesJoueurs
+	 */
+	public Collection getLesJoueurs() {
+		return lesJoueurs.values();
+	}
 	/**
 	 * Constructeur de la classe JeuServeur.
 	 * Initialise le contrôleur du jeu pour gérer les événements et la communication avec les clients.

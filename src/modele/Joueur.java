@@ -60,6 +60,13 @@ public class Joueur extends Objet implements Global {
 	}
 
 	/**
+	 * @return the orientation
+	 */
+	public int getOrientation() {
+		return orientation;
+	}
+
+	/**
 	 * Initialise un joueur avec une référence au serveur du jeu.
 	 *
 	 * @param jeuServeur Instance du jeu serveur permettant la gestion du joueur.
@@ -81,7 +88,7 @@ public class Joueur extends Objet implements Global {
 	 * @param lesJoueurs Liste des joueurs existants pour éviter les chevauchements.
 	 * @param lesMurs Liste des murs dans l'arène pour gérer les collisions.
 	 */
-	public void initPerso(String pseudo, int numPerso, Collection<Joueur> lesJoueurs, ArrayList<Mur> lesMurs) {
+	public void initPerso(String pseudo, int numPerso, Collection lesJoueurs, Collection lesMurs) {
 		this.pseudo = pseudo;
 		this.numPerso = numPerso;
 		System.out.println("joueur "+pseudo+" - num perso "+numPerso+" créé");
@@ -91,9 +98,13 @@ public class Joueur extends Objet implements Global {
 		message.setHorizontalAlignment(SwingConstants.CENTER);
 		message.setFont(new Font("Dialog", Font.PLAIN, 8));
 		
+		this.boule = new Boule(this.jeuServeur);
+		
 		this.premierePosition(lesJoueurs, lesMurs);
 		this.jeuServeur.ajoutJLabelJeuArene(jLabel);
 		this.jeuServeur.ajoutJLabelJeuArene(message);
+		this.jeuServeur.ajoutJLabelJeuArene(boule.getjLabel());
+		
 		this.affiche(MARCHE, this.etape);
 	}
 
@@ -104,12 +115,12 @@ public class Joueur extends Objet implements Global {
 	 * @param lesJoueurs Liste des joueurs déjà présents dans l'arène.
 	 * @param lesMurs Liste des murs pour éviter les collisions.
 	 */
-	private void premierePosition(Collection<Joueur> lesJoueurs, ArrayList<Mur> lesMurs) {
+	private void premierePosition(Collection lesJoueurs, Collection lesMurs) {
 		jLabel.setBounds(0, 0, LARGEURPERSO, HAUTEURPERSO);
 		do {
 			posX = (int) Math.round(Math.random() * (LARGEURARENE - LARGEURPERSO));
 			posY = (int) Math.round(Math.random() * (HAUTEURARENE - HAUTEURPERSO - HAUTEURMESSAGE));
-		} while (this.toucheJoueur(lesJoueurs) || this.toucheMur(lesMurs));
+		} while(toucheCollectionObjetsAvecStream(lesJoueurs)!=null || toucheCollectionObjetsAvecStream(lesMurs)!=null);
 	}
 	
 	/**
@@ -131,9 +142,15 @@ public class Joueur extends Objet implements Global {
 	}
 
 	/**
-	 * Gère une action reçue et qu'il faut afficher (déplacement, tir de boule...)
+	 * Traite une action du joueur en fonction de la touche reçue.
+	 * Effectue le déplacement si l'action correspond à une direction,
+	 * met à jour l'orientation du personnage et actualise son affichage.
+	 * 
+	 * @param action Code de la touche pressée, représentant l'action à exécuter.
+	 * @param lesJoueurs Collection des joueurs présents dans l'arène, utilisée pour vérifier les collisions.
+	 * @param lesMurs Liste des murs présents dans l'arène, utilisée pour éviter les déplacements invalides.
 	 */
-	public void action(Integer action, Collection<Joueur> lesJoueurs, ArrayList<Mur> lesMurs) {
+	public void action(Integer action, Collection lesJoueurs, Collection lesMurs) {
 		switch (action) {
         case KeyEvent.VK_LEFT:
         	deplace(-PAS, 0, lesJoueurs, lesMurs);
@@ -149,14 +166,27 @@ public class Joueur extends Objet implements Global {
         case KeyEvent.VK_DOWN:
         	deplace(0, PAS, lesJoueurs, lesMurs);
             break;
+        case KeyEvent.VK_SPACE:
+        	System.out.println("Classe Joueur met action détecte touche espace");
+        	if (!this.boule.jLabel.isVisible()) {
+        		this.boule.tireBoule(this, lesMurs);
+        		}
 		}
 		this.affiche(MARCHE, this.etape);
 	}
 
 	/**
-	 * Gère le déplacement du personnage
+	 * Gère le déplacement du personnage en fonction des coordonnées fournies.
+	 * Met à jour la position et vérifie si le déplacement est valide.
+	 * Si le joueur sort des limites de l'arène ou entre en collision avec un mur ou un autre joueur,
+	 * le déplacement est annulé et la position précédente est restaurée.
+	 *
+	 * @param deltaX Déplacement horizontal du joueur (peut être positif ou négatif).
+	 * @param deltaY Déplacement vertical du joueur (peut être positif ou négatif).
+	 * @param lesJoueurs Collection des joueurs présents dans l'arène pour vérifier les collisions.
+	 * @param lesMurs Liste des murs présents dans l'arène pour vérifier les collisions.
 	 */
-	private void deplace(Integer deltaX, Integer deltaY, Collection<Joueur> lesJoueurs, ArrayList<Mur> lesMurs) {
+	private void deplace(Integer deltaX, Integer deltaY, Collection lesJoueurs, Collection lesMurs) {
 		this.etape = (etape % NBETAPESMARCHE) + 1;
 		
 		int savePosX = posX;
@@ -172,7 +202,7 @@ public class Joueur extends Objet implements Global {
 			posY = savePosY;
 			return;
 		}
-		if (toucheMur(lesMurs) || toucheJoueur(lesJoueurs)) {
+		if (toucheCollectionObjetsAvecStream(lesJoueurs)!=null || toucheCollectionObjetsAvecStream(lesMurs)!=null) {
 			posX = savePosX;
 			posY = savePosY;
 		}
@@ -198,12 +228,14 @@ public class Joueur extends Objet implements Global {
 	 * Gain de points de vie après avoir touché un joueur
 	 */
 	public void gainVie() {
+		this.vie += GAIN;
 	}
 	
 	/**
 	 * Perte de points de vie après avoir été touché 
 	 */
 	public void perteVie() {
+		this.vie = Math.max(0, this.vie - PERTE);
 	}
 	
 	/**
@@ -226,7 +258,7 @@ public class Joueur extends Objet implements Global {
 	 * @return true si vie = 0
 	 */
 	public Boolean estMort() {
-		return null;
+		return this.vie <= 0;
 	}
 	
 	/**
