@@ -16,6 +16,8 @@ import controleur.Controle;
 import controleur.Global;
 import modele.Mur;
 import modele.Objet;
+import outils.son.Son;
+
 import java.awt.event.KeyAdapter;
 import java.util.Set;
 
@@ -61,6 +63,10 @@ public class Arene extends JFrame implements Global {
 	 * Zone d'affichage du t'chat
 	 */
 	private JTextArea txtChat;
+	/**
+	 * Tableau des sons disponibles dan l'arène
+	 */
+	private Son[] lesSons = new Son[SON.length];
 	/**
 	 * Retourne le texte actuel affiché dans le tchat du jeu.
 	 *
@@ -193,6 +199,14 @@ public class Arene extends JFrame implements Global {
 	        this.controle.evenementArene(e.getKeyCode());
 	    }
 	}
+	
+	public void joueSon(Integer numeroDuSon) {
+	    if (numeroDuSon != null && numeroDuSon >= 0 && numeroDuSon < lesSons.length) {
+	        this.lesSons[numeroDuSon].play();
+	    } else {
+	        System.err.println("Erreur : numéro de son invalide -> " + numeroDuSon);
+	    }
+	}
 	/**
 	 * Constructeur de la classe Arene.
 	 * Initialise la fenêtre de jeu et ses éléments graphiques.
@@ -265,6 +279,12 @@ public class Arene extends JFrame implements Global {
 		lblFond.setIcon(new ImageIcon(resource));		
 		lblFond.setBounds(0, 0, 800, 600);
 		contentPane.add(lblFond);
+		
+		if (this.estClient) {
+			for (int i = 0; i < SON.length; i++) {
+				lesSons[i] = new Son(getClass().getClassLoader().getResource(SON[i]));
+			}
+		}
 
 		this.controle = controle;
 		afficherInfosArene();

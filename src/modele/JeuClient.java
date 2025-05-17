@@ -61,6 +61,9 @@ public class JeuClient extends Jeu implements Global {
 		if (info instanceof String) {
 			this.controle.evenementJeuClient(MODIFTCHAT, info);
 		}
+		if (info instanceof Integer) {
+			this.controle.evenementJeuClient(JOUESON, info);
+		}
 	}
 	/**
 	 * Déconnecte le client du serveur et libère les ressources associées.

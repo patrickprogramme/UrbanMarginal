@@ -115,6 +115,7 @@ public class Controle implements AsyncResponse, Global {
 	 * - `AJOUTPANELMURS` : Ajoute le panneau des murs à l'arène.
 	 * - `MODIFPANELJEU` : Met à jour le panneau du jeu avec de nouveaux éléments.
 	 * - `MODIFTCHAT` : Modifie le texte du chat avec les nouvelles informations reçues.
+	 * - `JOUESON` : Joue un son.
 	 *
 	 * @param ordre Type d'événement à traiter.
 	 * @param info Informations associées à l'événement (peut être un `JPanel` ou une `String`).
@@ -129,6 +130,10 @@ public class Controle implements AsyncResponse, Global {
 			break;
 		case MODIFTCHAT:
 			this.frameArene.setTxtChat((String)info);
+			break;
+		case JOUESON:
+			this.frameArene.joueSon((Integer)info);
+			break;
 		}
 	}
 	/**
