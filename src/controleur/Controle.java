@@ -181,6 +181,8 @@ public class Controle implements AsyncResponse, Global {
 			this.leJeu.reception(connection, info);
 			break;
 		case DECONNEXION:
+			System.out.println("Contrôle dit: déconnexion");
+			this.leJeu.deconnexion(connection);
 			break;
 		}
 	}

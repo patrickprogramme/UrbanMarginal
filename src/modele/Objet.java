@@ -33,6 +33,7 @@ public abstract class Objet {
 	}
 
 	/**
+	 * retourne la coordonnée sur X de l'objet
 	 * @return the posX
 	 */
 	public Integer getPosX() {
@@ -40,12 +41,34 @@ public abstract class Objet {
 	}
 
 	/**
+	 * retourne la coordonnée sur Y de l'objet
 	 * @return the posY
 	 */
 	public Integer getPosY() {
 		return posY;
 	}
-
+	/**
+	 * Définit la position X de l'objet.
+	 * <p>
+	 * Ce setter n'est présent que pour des **tests unitaires** et ne devrait 
+	 * pas être utilisé en production.
+	 * </p>
+	 * @param posX Nouvelle position X de l'objet.
+	 */
+	public void setPosX(Integer posX) {
+		this.posX = posX;
+	}
+	/**
+	 * Définit la position Y de l'objet.
+	 * <p>
+	 * Ce setter est uniquement utilisé pour les **tests unitaires** et n'a 
+	 * pas d'usage en dehors du cadre de test.
+	 * </p>
+	 * @param posY Nouvelle position Y de l'objet.
+	 */
+	public void setPosY(Integer posY) {
+		this.posY = posY;
+	}
 	/**
 	 * Vérifie si l'objet actuel entre en collision avec un autre objet.
 	 *
@@ -71,7 +94,7 @@ public abstract class Objet {
 	}
 	/**
 	 * Vérifie Vérifie si l'objet actuel entre en collision avec un des objets d'une collection.
-	 * @param lesObjets
+	 * @param lesObjets collection d'objet qui seront testés
 	 * @return bolléen : collision ou pas ?
 	 */
 	public Boolean toucheCollectionObjets(Collection<Objet> lesObjets) {

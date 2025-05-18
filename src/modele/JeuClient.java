@@ -69,7 +69,9 @@ public class JeuClient extends Jeu implements Global {
 	 * Déconnecte le client du serveur et libère les ressources associées.
 	 */
 	@Override
-	public void deconnexion() {
+	public void deconnexion(Connection connection) {
+		System.out.println("JeuClient dit: déconnexion");
+		System.exit(0); //ferme la fenêtre du client en cas de deconnexion du serveur
 	}
 
 	/**

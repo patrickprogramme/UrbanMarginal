@@ -27,7 +27,8 @@ public class JeuServeur extends Jeu implements Global {
 
 	private Hashtable<Connection, Joueur> lesJoueurs = new Hashtable<Connection, Joueur>() ;
 	/**
-	 * @return the lesJoueurs
+	 * getter pour extraire seulement les valeurs de la Hashtable
+	 * @return lesJoueurs.values()
 	 */
 	public Collection getLesJoueurs() {
 		return lesJoueurs.values();
@@ -89,7 +90,11 @@ public class JeuServeur extends Jeu implements Global {
 	 * À implémenter pour gérer la suppression propre des joueurs.
 	 */
 	@Override
-	public void deconnexion() {
+	public void deconnexion(Connection connection) {
+		System.out.println("JeuServeur dit: déconnexion");
+		this.lesJoueurs.get(connection).departJoueur();
+		this.lesJoueurs.remove(connection);
+		
 	}
 
 	/**

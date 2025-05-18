@@ -199,7 +199,13 @@ public class Arene extends JFrame implements Global {
 	        this.controle.evenementArene(e.getKeyCode());
 	    }
 	}
-	
+	/**
+	 * Joue un son à partir de la liste prédéfinie en fonction du numéro fourni.
+	 * Vérifie la validité du numéro avant de lancer la lecture du son.
+	 * Affiche un message d'erreur si le numéro est invalide.
+	 *
+	 * @param numeroDuSon L'index du son à jouer dans la liste des sons disponibles.
+	 */
 	public void joueSon(Integer numeroDuSon) {
 	    if (numeroDuSon != null && numeroDuSon >= 0 && numeroDuSon < lesSons.length) {
 	        this.lesSons[numeroDuSon].play();

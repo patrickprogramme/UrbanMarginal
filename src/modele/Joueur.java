@@ -60,7 +60,8 @@ public class Joueur extends Objet implements Global {
 	}
 
 	/**
-	 * @return the orientation
+	 * le personnage est-il tourné vers la droite ou la gauche ?
+	 * @return orientation : 0 pour gauche, 1 pour droite.
 	 */
 	public int getOrientation() {
 		return orientation;
@@ -151,6 +152,9 @@ public class Joueur extends Objet implements Global {
 	 * @param lesMurs Liste des murs présents dans l'arène, utilisée pour éviter les déplacements invalides.
 	 */
 	public void action(Integer action, Collection lesJoueurs, Collection lesMurs) {
+		if (this.estMort()) {
+			return;
+		}
 		switch (action) {
         case KeyEvent.VK_LEFT:
         	deplace(-PAS, 0, lesJoueurs, lesMurs);
@@ -167,7 +171,6 @@ public class Joueur extends Objet implements Global {
         	deplace(0, PAS, lesJoueurs, lesMurs);
             break;
         case KeyEvent.VK_SPACE:
-        	System.out.println("Classe Joueur met action détecte touche espace");
         	if (!this.boule.jLabel.isVisible()) {
         		this.boule.tireBoule(this, lesMurs);
         		}
@@ -229,13 +232,17 @@ public class Joueur extends Objet implements Global {
 	 */
 	public void gainVie() {
 		this.vie += GAIN;
+//		this.message.setText(pseudo+": "+vie);
+//		this.jeuServeur.envoiJeuATous();
+		affiche(MARCHE, etape);
 	}
 	
 	/**
 	 * Perte de points de vie après avoir été touché 
 	 */
 	public void perteVie() {
-		this.vie = Math.max(0, this.vie - PERTE);
+		this.vie = Math.max(0, this.vie - PERTE); //prend le max entre les deux = jamais en dessous de zéro.
+		affiche(MARCHE, etape);
 	}
 	
 	/**
@@ -265,6 +272,13 @@ public class Joueur extends Objet implements Global {
 	 * Le joueur se déconnecte et disparait
 	 */
 	public void departJoueur() {
+		System.out.println(String.format("Joueur dit: départ du joueur %s", this.pseudo));
+	    if (super.jLabel != null) {
+			super.jLabel.setVisible(false);
+			this.message.setVisible(false);
+			this.boule.getjLabel().setVisible(false);
+			this.jeuServeur.envoiJeuATous();
+		}
 	}
 	
 }
